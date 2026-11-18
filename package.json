@@ -1,0 +1,22 @@
+{
+  "name": "dotmix-portfolio",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "homepage": "https://lotec-dev.com",
+  "scripts": {
+    "build-info": "node scripts/write-build-info.mjs",
+    "dev": "node scripts/write-build-info.mjs && mix dev",
+    "build": "node scripts/write-build-info.mjs && mix build src dist --clean --prerender /,/samplers",
+    "preview": "mix preview dist",
+    "check": "node scripts/write-build-info.mjs && mix check src",
+    "verify": "node scripts/verify-browser.mjs"
+  },
+  "dependencies": {
+    "@dotmix/router": "0.1.0",
+    "@dotmix/runtime": "0.1.0"
+  },
+  "devDependencies": {
+    "@dotmix/cli": "0.1.0"
+  }
+}

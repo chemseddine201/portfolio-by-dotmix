@@ -1,0 +1,42 @@
+import { site } from "../data/site.js";
+
+interface Letter {
+  id: string;
+  ch: string;
+}
+
+interface Word {
+  id: string;
+  letters: Letter[];
+}
+
+/**
+ * Home hero: "Field" in terminal style. `whoami` prints the name as spring letters
+ * (motion/hero-fx.ts), then the role line types out with a blinking caret (pure CSS).
+ */
+export default function Hero() {
+  const words: Word[] = site.name
+    .split(" ")
+    .filter((w) => w !== "")
+    .map((w, i) => ({ id: `w${i}`, letters: w.split("").map((ch, j) => ({ id: `w${i}l${j}`, ch })) }));
+
+  return (
+    <div class="fd" data-field>
+      <div class="fd-spot" aria-hidden="true"></div>
+      <div class="container fd-inner">
+        <p class="prompt hero-prompt"><span class="prompt-path">~</span> $ whoami</p>
+        <h1 class="display fd-title" aria-label={site.name}>
+          {each (w, i) in words}
+            <span class="fd-word" aria-hidden="true">{each (l, j) in w.letters}<span class="fd-ch" data-field-ch>{l.ch}</span>{endeach}</span>{" "}
+          {endeach}
+        </h1>
+        <p class="fd-role"><span class="type" style={`--n:${site.roleLine.length}`}>{site.roleLine}</span><span class="caret" aria-hidden="true"></span></p>
+        <p class="lede fd-lede">{site.summary}</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#work" data-magnetic>See my work <span aria-hidden="true">→</span></a>
+            <a class="btn btn-outline" href="#contact" data-magnetic>Get in touch</a>
+        </div>
+      </div>
+    </div>
+  );
+}

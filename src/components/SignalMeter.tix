@@ -1,0 +1,57 @@
+import { onCleanup, onMount } from "@dotmix/runtime";
+
+/**
+ * Live proof of fine-grained reactivity, built with dotMix signals.
+ * Pointer moves write two signals; dotMix updates two text nodes. A MutationObserver on the
+ * readout measures the real DOM mutations (it never observes its own counters, so no feedback loop).
+ */
+export default function SignalMeter() {
+  const x = signal(0);
+  const y = signal(0);
+  const writes = signal(0);
+  const textMutations = signal(0);
+  const nodesCreated = signal(0);
+  const readout = createRef<HTMLElement>(null);
+
+  if (typeof window !== "undefined") {
+    const move = (e: PointerEvent): void => {
+      x.set(Math.round(e.clientX));
+      y.set(Math.round(e.clientY));
+      writes.set((n) => n + 2);
+    };
+    window.addEventListener("pointermove", move, { passive: true });
+    onCleanup(() => window.removeEventListener("pointermove", move));
+    onMount(() => {
+      const el = readout.current;
+      if (el === null) return;
+      const observer = new MutationObserver((records) => {
+        let text = 0;
+        let added = 0;
+        for (const r of records) {
+          if (r.type === "characterData") text += 1;
+          if (r.type === "childList") added += r.addedNodes.length;
+        }
+        if (text > 0) textMutations.set((n) => n + text);
+        if (added > 0) nodesCreated.set((n) => n + added);
+      });
+      observer.observe(el, { subtree: true, characterData: true, childList: true });
+      return () => observer.disconnect();
+    });
+  }
+
+  return (
+    <div class="meter" role="group" aria-label="Live dotMix reactivity meter">
+      <div class="meter-row">
+        <span class="meter-live"><span class="pulse-dot" aria-hidden="true"></span> live</span>
+        <span class="meter-readout" ref={readout}>x <b>{x()}</b> · y <b>{y()}</b></span>
+      </div>
+      <div class="meter-row meter-stats">
+        <span><b>{writes()}</b> signal writes</span>
+        <span class="meter-arrow" aria-hidden="true">→</span>
+        <span><b>{textMutations()}</b> text-node updates</span>
+        <span><b>{nodesCreated()}</b> nodes created</span>
+        <span><b>0</b> VDOM diffs</span>
+      </div>
+    </div>
+  );
+}

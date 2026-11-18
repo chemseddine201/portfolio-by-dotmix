@@ -1,0 +1,72 @@
+import { site } from "../data/site.js";
+
+interface SiteHeaderProps {
+  /** Prefix for in-page anchors: "" on the home page, "/" elsewhere. */
+  base: string;
+}
+
+export default function SiteHeader(props: SiteHeaderProps = { base: "" }) {
+  const home = props.base === "" ? "#main" : "/";
+
+  return (
+    <header class="site-header container">
+      <a class="skip-link" href="#main">Skip to content</a>
+      <a class="mark" href={home}>
+        <span class="mark-dot" aria-hidden="true">●</span>
+        <span class="mark-name">{site.name}</span>
+      </a>
+      <a class="nav-link" href={`https://github.com/${site.githubUser}`}>github ↗</a>
+    </header>
+  );
+}
+
+<style>
+  .site-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0 16px;
+    min-height: 72px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  .mark-dot {
+    color: var(--accent);
+    font-size: 0.9em;
+  }
+  .nav-list {
+    display: flex;
+    gap: 4px;
+    margin-right: -10px;
+    list-style: none;
+    padding: 0;
+  }
+  .nav-list li {
+    overflow-wrap: normal;
+  }
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-inline: 10px;
+    white-space: nowrap;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9375rem;
+  }
+  .built-with {
+    gap: 0.3em;
+  }
+  .nav-link:hover {
+    color: var(--text);
+  }
+</style>

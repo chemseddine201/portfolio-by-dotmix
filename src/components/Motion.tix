@@ -1,0 +1,11 @@
+import { onMount } from "@dotmix/runtime";
+import { flags } from "../flags/flags.js";
+import { installMotion } from "../motion/motion.js";
+
+/** Renderless island: installs scroll reveals, tilt, magnetic and parallax; disposed with its owner. */
+export default function Motion() {
+  if (typeof window !== "undefined" && flags.isOn("motion")) {
+    onMount(() => installMotion(document));
+  }
+  return (<span class="motion-anchor" hidden></span>);
+}

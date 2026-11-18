@@ -1,0 +1,46 @@
+import SiteHeader from "../components/SiteHeader.tix";
+import Hero from "../components/Hero.tix";
+import Skills from "../components/Skills.tix";
+import Marquee from "../components/Marquee.tix";
+import Projects from "../components/Projects.tix";
+import About from "../components/About.tix";
+import Contact from "../components/Contact.tix";
+import SiteFooter from "../components/SiteFooter.tix";
+import Dock from "../components/Dock.tix";
+import Cursor from "../components/Cursor.tix";
+import Motion from "../components/Motion.tix";
+import { useHead } from "@dotmix/router";
+import { EMPTY_FEED } from "../data/feed.schema.js";
+import { pageTitle, site } from "../data/site.js";
+
+/** Home page. The news feed is the static fallback (`EMPTY_FEED`) until a syndication source exists. */
+export default function IndexPage() {
+  useHead({ title: pageTitle(site), meta: [{ name: "robots", content: "index, follow" }] });
+  const ticker = ["PHP", "JavaScript", "TypeScript", "Java", "React.js", "Laravel", "Netty", "Node.js", "HTML", "CSS", "Git", "Claude Code", "Antigravity"];
+
+  return (
+    <div class="site">
+      <SiteHeader base="" />
+      <main id="main">
+        <section class="hero" aria-label="Introduction">
+          <Hero />
+        </section>
+        <Marquee items={ticker} direction="left" />
+        <Skills />
+        <Projects />
+        <About feed={EMPTY_FEED} />
+        <Contact />
+      </main>
+      <SiteFooter />
+      <Dock />
+      <Cursor />
+      <Motion />
+    </div>
+  );
+}
+
+<style>
+  .hero {
+    overflow: clip;
+  }
+</style>

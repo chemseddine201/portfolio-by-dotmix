@@ -1,0 +1,34 @@
+import { site } from "../data/site.js";
+
+interface DockItem {
+  id: string;
+  label: string;
+  href: string;
+  icon: string;
+}
+
+/** Floating navigation dock. Static anchors (works without JS); magnification is a motion effect. */
+export default function Dock() {
+  const items: DockItem[] = [
+    { id: "work", label: "Work", href: "#work", icon: "M4 6h16v12H4z M9 6V4h6v2" },
+    { id: "skills", label: "Skills", href: "#skills", icon: "M8 8l-4 4 4 4 M16 8l4 4-4 4 M13 6l-2 12" },
+    { id: "about", label: "About", href: "#about", icon: "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6" },
+    { id: "contact", label: "Contact", href: "#contact", icon: "M4 6h16v12H4z M4 7l8 6 8-6" },
+    { id: "github", label: "GitHub", href: `https://github.com/${site.githubUser}`, icon: "M9 19c-4 1.5-4-2-6-2.5 M15 21v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12 12 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21" }
+  ];
+
+  return (
+    <nav class="dock" aria-label="Primary" data-dock>
+      <ul class="dock-list">
+        {each (item, i) in items}
+          <li class="dock-item" data-dock-item>
+            <a class="dock-link" href={item.href} aria-label={item.label}>
+              <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d={item.icon}></path></svg>
+              <span class="dock-tip" aria-hidden="true">{item.label}</span>
+            </a>
+          </li>
+        {endeach}
+      </ul>
+    </nav>
+  );
+}

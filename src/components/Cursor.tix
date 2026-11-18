@@ -1,0 +1,42 @@
+import { onCleanup } from "@dotmix/runtime";
+import { flags } from "../flags/flags.js";
+
+/**
+ * 6px difference-blend dot cursor (DESIGN.md §6).
+ * Position updates bypass signals on purpose: one rAF transform write per frame, no layout reads.
+ * Browser-only work is guarded with `typeof window`, so the component also renders where there is no
+ * window. Nothing here waits for the DOM (`dot` is read on pointer moves), so it needs no onMount.
+ */
+export default function Cursor() {
+  const dot = createRef<HTMLElement>(null);
+
+  if (typeof window !== "undefined" && flags.isOn("cursorDot")) {
+    const finePointer = window.matchMedia("(pointer: fine) and (hover: hover)");
+    if (finePointer.matches) {
+      let frame = 0;
+      let x = -100;
+      let y = -100;
+      const paint = (): void => {
+        frame = 0;
+        const el = dot.current;
+        if (el !== null) el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+      };
+      const move = (event: PointerEvent): void => {
+        x = event.clientX;
+        y = event.clientY;
+        if (frame === 0) frame = window.requestAnimationFrame(paint);
+      };
+      window.addEventListener("pointermove", move, { passive: true });
+      document.documentElement.classList.add("has-dot-cursor");
+      onCleanup(() => {
+        window.removeEventListener("pointermove", move);
+        if (frame !== 0) window.cancelAnimationFrame(frame);
+        document.documentElement.classList.remove("has-dot-cursor");
+      });
+    }
+  }
+
+  return (
+    <div class="dot-cursor" ref={dot} aria-hidden="true"></div>
+  );
+}

@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+# Generated before every dev, build and check; holds the public contact values from .env.
+src/data/build-info.ts
+.verify/
+.claude/
+.agents/
+.history/
+skills-lock.json
+*.md
+!README.md

@@ -1,0 +1,139 @@
+import type { Feed } from "../data/feed.schema.js";
+import { site } from "../data/site.js";
+
+interface AboutProps {
+  /** Syndicated posts and activity. No syndication source exists yet, so the home page passes EMPTY_FEED. */
+  feed: Feed;
+}
+
+export default function About(props: AboutProps) {
+  const day = (iso: string): string => iso.slice(0, 10);
+
+  return (
+    <section id="about" class="section" aria-labelledby="about-title">
+      <div class="container about-grid">
+        <div class="about-copy" data-reveal>
+          <p class="prompt"><span class="prompt-path">~</span> $ cat about.md</p>
+          <h2 id="about-title" class="section-title">About me</h2>
+          <p class="philosophy">I spent years mastering how light travels through various media - Now I master how ideas travel, from concept to code.</p>
+        </div>
+
+        <div class="about-feed" data-reveal>
+          <div class="panel">
+            <div class="panel-bar">
+              <span class="badge">writing</span>
+              <span class="badge">{props.feed.source}</span>
+            </div>
+            {if props.feed.posts.length > 0}
+              <ul class="feed-list">
+                {each (post, i) in props.feed.posts}
+                  <li class="feed-item">
+                    <a href={post.url}>{post.title}</a>
+                    <time class="badge" datetime={post.published}>{day(post.published)}</time>
+                  </li>
+                {endeach}
+              </ul>
+            {else}
+              <p class="feed-fallback">Posts are published on <a href={site.blogUrl}>the blog</a>.</p>
+            {endif}
+          </div>
+
+          <div class="panel">
+            <div class="panel-bar">
+              <span class="badge">github activity</span>
+              <span class="badge">@{site.githubUser}</span>
+            </div>
+            {if props.feed.activity.length > 0}
+              <ul class="feed-list">
+                {each (item, i) in props.feed.activity}
+                  <li class="feed-item">
+                    <a href={item.url}>{item.summary}</a>
+                    <span class="badge">{item.repo} · {day(item.at)}</span>
+                  </li>
+                {endeach}
+              </ul>
+            {else}
+              <p class="feed-fallback">Recent work is on <a href={`https://github.com/${site.githubUser}`}>GitHub</a>.</p>
+            {endif}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+<style>
+  .about-grid {
+    display: grid;
+    gap: 48px;
+  }
+  @media (min-width: 1024px) {
+    .about-grid {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: 64px;
+    }
+  }
+  .about-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .philosophy {
+    max-width: 62ch;
+    color: var(--text-muted);
+  }
+  .sub-title {
+    margin-top: 20px;
+    font-size: var(--fs-h3);
+  }
+  .pipeline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+    counter-reset: stage;
+  }
+  .stage {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 14px;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+    counter-increment: stage;
+  }
+  .stage-name {
+    font-weight: 600;
+  }
+  .stage-name::before {
+    content: counter(stage, decimal-leading-zero) " ";
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: var(--fs-badge);
+  }
+  .about-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .feed-list {
+    list-style: none;
+    padding: 0;
+  }
+  .feed-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .feed-item:last-child {
+    border-bottom: 0;
+  }
+  .feed-fallback {
+    padding: 16px 12px;
+    color: var(--text-muted);
+    font-size: var(--fs-small);
+  }
+</style>

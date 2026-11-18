@@ -1,0 +1,56 @@
+import SiteHeader from "../components/SiteHeader.tix";
+import SiteFooter from "../components/SiteFooter.tix";
+import Cursor from "../components/Cursor.tix";
+import { useHead } from "@dotmix/router";
+import { site } from "../data/site.js";
+
+export default function NotFoundPage() {
+  useHead({ title: `Not found — ${site.name}`, meta: [{ name: "robots", content: "noindex" }] });
+
+  return (
+    <div class="site">
+      <SiteHeader base="/" />
+      <main id="main" class="container not-found">
+        <h1 class="nf-code">404</h1>
+        <span class="cut" aria-hidden="true"></span>
+        <p class="nf-text">This page does not exist. The link may be wrong, or the page has moved.</p>
+        <div class="panel nf-panel">
+          <div class="panel-bar"><span class="badge">route.mix</span></div>
+          <p class="badge nf-route">no route matched</p>
+        </div>
+        <a class="btn btn-primary" href="/">Back home</a>
+      </main>
+      <SiteFooter />
+      <Cursor />
+    </div>
+  );
+}
+
+<style>
+  .not-found {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    min-height: 70vh;
+    padding-block: 96px;
+  }
+  .nf-code {
+    font-size: clamp(5rem, 18vw, 11rem);
+    font-weight: 650;
+    letter-spacing: -0.05em;
+    line-height: 0.9;
+  }
+  .nf-text {
+    max-width: 44ch;
+    color: var(--text-muted);
+  }
+  .nf-panel {
+    width: min(100%, 420px);
+    margin-block: 24px 32px;
+  }
+  .nf-route {
+    padding: 16px 12px;
+    color: var(--diag);
+  }
+</style>

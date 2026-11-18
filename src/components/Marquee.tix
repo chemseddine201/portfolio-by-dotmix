@@ -1,0 +1,33 @@
+interface MarqueeProps {
+  items: string[];
+  /** "left" or "right". */
+  direction: string;
+}
+
+interface Chip {
+  id: string;
+  label: string;
+}
+
+/** Skewed infinite ticker. The list is rendered twice so the loop is seamless; the copy is aria-hidden. */
+export default function Marquee(props: MarqueeProps = { items: [], direction: "left" }) {
+  const first: Chip[] = props.items.map((label, i) => ({ id: `a${i}`, label }));
+  const second: Chip[] = props.items.map((label, i) => ({ id: `b${i}`, label }));
+
+  return (
+    <div class={`marquee marquee-${props.direction}`} data-velocity>
+      <div class="marquee-track">
+        <ul class="marquee-list">
+          {each (chip, i) in first}
+            <li class="marquee-item">{chip.label}<span class="marquee-sep" aria-hidden="true">/</span></li>
+          {endeach}
+        </ul>
+        <ul class="marquee-list" aria-hidden="true">
+          {each (chip, i) in second}
+            <li class="marquee-item">{chip.label}<span class="marquee-sep">/</span></li>
+          {endeach}
+        </ul>
+      </div>
+    </div>
+  );
+}

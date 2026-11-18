@@ -1,0 +1,61 @@
+import { PLACEHOLDER_MARK } from "../data/projects.schema.js";
+
+interface Skill {
+  id: string;
+  name: string;
+}
+
+interface Group {
+  id: string;
+  label: string;
+  skills: Skill[];
+}
+
+const group = (id: string, label: string, names: string[]): Group => ({
+  id,
+  label,
+  skills: names.map((name, i) => ({ id: `${id}${i}`, name }))
+});
+
+/** Skills printed like terminal output. No bars, no percentages: just what I work with. */
+export default function Skills() {
+  const groups: Group[] = [
+    group("lang", "languages", ["PHP", "JavaScript", "TypeScript", "Java", "Python", "HTML", "CSS", "Sass", "More..."]),
+    group("fw", "frameworks", ["ReactJs", "NextJs", "Laravel", "CakePhp", "Netty", "Spring Boot", "NestJs", "ExpressJs", "Docker", "Redis", "More..."]),
+    group("tools", "runtime & tools", ["Node.js", "Git", "VS Code", "Android Studio", "More..."]),
+    group("ai", "ai tools", ["Claude Code", "Google Antigravity", "Open Ai", "Kimi Ai", "Deepseek Ai", "N8N", "More..."])
+  ];
+  const isPlaceholder = (name: string): boolean => name.startsWith(PLACEHOLDER_MARK);
+
+  return (
+    <section id="skills" class="section" aria-labelledby="skills-title">
+      <div class="container">
+        <header class="section-head" data-reveal>
+          <p class="prompt"><span class="prompt-path">~/skills</span> $ ./skills.sh --list</p>
+          <h2 id="skills-title" class="section-title">Skills</h2>
+          <p class="section-sub">Languages, tools and AI I build with every day.</p>
+        </header>
+        <div class="term" data-reveal>
+          <div class="term-bar">
+            <span class="term-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="badge">skills.sh</span>
+            <span class="badge term-status">● exit 0</span>
+          </div>
+          <div class="term-body" data-reveal-group>
+            {each (g, i) in groups}
+              <div class="term-group" data-reveal>
+                <p class="term-line"><span class="term-prompt">$</span> skills --group <span class="term-arg">{g.label}</span></p>
+                <ul class="chip-row" aria-label={g.label}>
+                  {each (s, j) in g.skills}
+                    <li class={isPlaceholder(s.name) ? "chip chip-todo" : "chip"}>{s.name}</li>
+                  {endeach}
+                </ul>
+              </div>
+            {endeach}
+            <p class="term-line term-last"><span class="term-prompt">$</span> <span class="caret" aria-hidden="true"></span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

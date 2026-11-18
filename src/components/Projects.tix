@@ -1,0 +1,56 @@
+import ProjectCard from "./ProjectCard.tix";
+import { projects, advancedPrivateProjects } from "../data/projects.schema.js";
+
+export default function Projects() {
+  return (
+    <section id="work" class="section" aria-labelledby="work-title">
+      <div class="container">
+        <header class="section-head" data-reveal>
+          <p class="prompt"><span class="prompt-path">~/projects</span> $ ls -la</p>
+          <h2 id="work-title" class="section-title">Selected work</h2>
+          <p class="section-sub">Four open-source and framework systems, each told the same way: context, role, constraint, outcome.</p>
+        </header>
+        <ol class="project-grid" data-reveal-group>
+          {each (project, i) in projects}
+            <li class="project-cell" data-reveal><ProjectCard project={project} index={i} /></li>
+          {endeach}
+        </ol>
+
+        <header class="section-head private-head" data-reveal>
+          <p class="prompt"><span class="prompt-path">~/projects/enterprise</span> $ ls --classified</p>
+          <h3 class="section-title">Enterprise & Private Systems</h3>
+          <p class="section-sub">High-throughput telecom recharge pipelines, mobile OCR scanners, and ledger distribution engines built under proprietary contract.</p>
+        </header>
+        <ol class="project-grid" data-reveal-group>
+          {each (project, j) in advancedPrivateProjects}
+            <li class="project-cell" data-reveal><ProjectCard project={project} index={j + 4} /></li>
+          {endeach}
+        </ol>
+      </div>
+    </section>
+  );
+}
+
+<style>
+  .section-head {
+    margin-bottom: 40px;
+  }
+  .private-head {
+    margin-top: 64px;
+  }
+  .project-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+    list-style: none;
+    padding: 0;
+  }
+  @media (min-width: 720px) {
+    .project-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .project-cell {
+    min-width: 0;
+  }
+</style>

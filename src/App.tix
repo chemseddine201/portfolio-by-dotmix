@@ -1,0 +1,15 @@
+import { Outlet, RouterProvider } from "@dotmix/router";
+import type { Router } from "@dotmix/router";
+
+interface AppProps {
+  router: Router;
+}
+
+/** Application shell: every page is a route rendered by the router (src/routes.ts). */
+export default function App(props: AppProps) {
+  return (
+    <RouterProvider router={props.router}>
+      <Outlet />
+    </RouterProvider>
+  );
+}

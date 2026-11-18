@@ -1,0 +1,50 @@
+import { site } from "../data/site.js";
+import { buildInfo } from "../data/build-info.js";
+
+/** The build date comes from scripts/write-build-info.mjs; never hand-typed (DESIGN.md §5.2). */
+export default function SiteFooter() {
+  return (
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <p class="status-line">
+          <span class="badge status-item"><span class="status-dot" aria-hidden="true">●</span> online</span>
+          <span class="badge status-item">~ $ exit 0</span>
+        </p>
+        <ul class="footer-links">
+          <li><a class="text-link" href={`https://github.com/${site.githubUser}`}>GitHub ↗</a></li>
+          <li><a class="text-link" href="https://github.com/chemseddine201/dotMix">built with dotMix ↗</a></li>
+        </ul>
+      </div>
+    </footer>
+  );
+}
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--rule);
+    padding-block: 24px;
+  }
+  .footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .status-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+  }
+  .status-dot {
+    color: var(--accent);
+  }
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 20px;
+    list-style: none;
+    padding: 0;
+    font-size: var(--fs-small);
+  }
+</style>

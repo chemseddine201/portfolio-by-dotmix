@@ -1,0 +1,76 @@
+import { site, isFilled, facebookHref, facebookDisplay, whatsappHref, whatsappDisplay } from "../data/site.js";
+
+interface Channel {
+  id: string;
+  key: string;
+  name: string;
+  value: string;
+  href: string;
+  external: boolean;
+  ready: boolean;
+}
+
+/**
+ * Contact: a statement + big copyable email on the left, a live `contact.sh` session on the right
+ * that "resolves" every channel into a CLI menu. Unset channels show as quiet `not set` rows.
+ */
+export default function Contact() {
+  const channels: Channel[] = [
+    { id: "email", key: "1", name: "email", value: site.email, href: `mailto:${site.email}`, external: false, ready: isFilled(site.email) },
+    { id: "whatsapp", key: "2", name: "whatsapp", value: whatsappDisplay(site.whatsappNumber), href: whatsappHref(site.whatsappNumber), external: true, ready: isFilled(site.whatsappNumber) },
+    { id: "facebook", key: "3", name: "facebook", value: facebookDisplay(site.facebookUrl), href: facebookHref(site.facebookUrl), external: true, ready: isFilled(site.facebookUrl) },
+  ];
+  const found = channels.filter((c) => c.ready).length;
+  const sub = isFilled(site.availability) ? site.availability : "Have a project, a role or just an idea? My inbox is open.";
+
+  return (
+    <section id="contact" class="section cx" aria-labelledby="contact-title">
+      <div class="cx-glow" aria-hidden="true"></div>
+      <div class="container cx-grid">
+        <div class="cx-left" data-reveal>
+          <p class="prompt"><span class="prompt-path">~</span> $ contact --now</p>
+          <h2 id="contact-title" class="cx-title">Let’s build <span class="cx-accent">something</span> together.</h2>
+          <p class="cx-sub">{sub}</p>
+          <div class="cx-email">
+            <a class="cx-email-link" href={`mailto:${site.email}`}>{site.email}</a>
+            <button class="cx-copy" type="button" data-copy-value={site.email} aria-label="Copy email address">copy</button>
+          </div>
+        </div>
+
+        <div class="term cx-term" data-reveal>
+          <div class="term-bar">
+            <span class="term-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="badge">contact.sh</span>
+            <span class="badge term-status">● online</span>
+          </div>
+          <div class="term-body cx-body">
+            <p class="term-line cx-line"><span class="term-prompt">$</span> ssh hello@chemseddine</p>
+            <p class="term-line cx-line cx-dim">→ resolving channels…</p>
+            <p class="term-line cx-line cx-ok">✓ {found} of {channels.length} channels ready</p>
+            <ul class="cx-menu" aria-label="Contact channels">
+              {each (c, i) in channels}
+                <li class="cx-line">
+                  {if c.ready}
+                    <a class="cx-row" href={c.href} target={c.external ? "_blank" : undefined} rel={c.external ? "noopener" : undefined}>
+                      <span class="cx-key" aria-hidden="true">{c.key}</span>
+                      <span class="cx-name">{c.name}</span>
+                      <span class="cx-val">{c.value}</span>
+                      <span class="cx-go" aria-hidden="true">↗</span>
+                    </a>
+                  {else}
+                    <span class="cx-row is-todo">
+                      <span class="cx-key" aria-hidden="true">{c.key}</span>
+                      <span class="cx-name">{c.name}</span>
+                      <span class="cx-val">not set · REPLACE_ME</span>
+                    </span>
+                  {endif}
+                </li>
+              {endeach}
+            </ul>
+            <p class="term-line cx-line"><span class="term-prompt">$</span> <span class="caret" aria-hidden="true"></span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
